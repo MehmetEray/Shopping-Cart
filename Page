@@ -1,0 +1,120 @@
+package ProjectPackage;
+
+import java.util.Scanner;
+
+public class Page {
+    public static Item item = new Item();
+    public static void generalMenu(String type, String username){
+        Scanner input = new Scanner(System.in);
+        if (type.equals("admin")){
+            // admin menu will come here
+            System.out.println("Welcome Admin : " + username);
+            System.out.println("*********ADMIN MENU*********");
+            System.out.println(" 0 - LOG OUT");
+            System.out.println(" 1 - Enter a product ");
+            System.out.println(" 2 - Delete a product");
+            System.out.println(" 3 - List products");
+            System.out.println(" 4 - List registered users");
+            System.out.println(" 99 -> EXIT");
+            int selection = input.nextInt();
+            switch (selection) {
+                case 0:
+                    Menu.regOrLog();
+                    break;
+                case 1:
+                    System.out.println("Please give me id");
+                    int id  = input.nextInt();
+                    System.out.println("Please give me name of item");
+                    String name = input.next();
+                    System.out.println("Please give me price of item");
+                    double price = input.nextDouble();
+                    System.out.println("Please give me desc of item");
+                    String desc = input.next();
+                    System.out.println("Please give me quantity");
+                    int quantity  = input.nextInt();
+                    Item tempNewItem = new Item(id,name,price,desc,quantity);
+                    item.addItemToCart(tempNewItem);
+                    Page.generalMenu("admin",username);
+                case 2:
+                    System.out.println("which item do you want to remove");
+                    String removeItem = input.next();
+                    item.removeItem(removeItem);
+                    Page.generalMenu("admin",username);
+                case 3:
+                    System.out.println("give me id");
+                    int selectionId = input.nextInt();
+                    item.getItemDescription(selectionId);
+                    Page.generalMenu("admin",username);
+                case 4:
+                    Page.generalMenu("admin",username);
+                case 99:
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if (type.equals("user")){
+            System.out.println("Welcome User : " + username);
+            System.out.println("*********USER MENU*********");
+            System.out.println(" 0 - LOG OUT");
+            System.out.println(" 1 - List all products");
+            System.out.println(" 2 - List products of type");
+            System.out.println(" 3 - Get description for a product");
+            System.out.println(" 4 - Add to my cart");
+            System.out.println(" 5 - Cancel an item");
+            System.out.println(" 6 - Buy items");
+            System.out.println(" 7 - Show my history");
+            System.out.println(" 99 -> EXIT");
+            int selection = input.nextInt();
+            switch (selection){
+                case 0:
+                    Menu.regOrLog();
+                    generalMenu("user",username);
+                case 1:
+                    item.getItemList();
+                    generalMenu("user",username);
+                case 2:
+                    generalMenu("user",username);
+                case 3:
+                    System.out.println("Enter product's ID please");
+                    int selectionId = input.nextInt();
+                    item.getItemDescription(selectionId);
+                    generalMenu("user",username);
+                case 4:
+                    System.out.println("Enter item name please");
+                    String addedItemName = input.next();
+                    System.out.println("Enter item ID please");
+                    int addedItemID = input.nextInt();
+                    System.out.println("Enter item description please");
+                    String addedItemDesc = input.next();
+                    System.out.println("Enter item price please");
+                    double addedItemPrice = input.nextDouble();
+                    System.out.println("Enter item quantity please");
+                    int addedItemQuantity = input.nextInt();
+                    Item item4 = new Item(addedItemID,addedItemName,addedItemPrice,addedItemDesc,addedItemQuantity);
+                    item.addItemToCart(item4);
+                    System.out.println(addedItemName + " is added");
+                    generalMenu("user",username);
+                case 5:
+                    System.out.println("Enter product's name please");
+                    String selectionName = input.next();
+                    Item.removeItem(selectionName);
+                    System.out.println(selectionName + " is canceled ");
+                    generalMenu("user",username);
+                case 6:
+                    generalMenu("user",username);
+                case 7:
+                    System.out.println("Our history is ...");
+                    generalMenu("user",username);
+                case 99:
+                    break;
+                default:
+                    break;
+            }
+        }
+        else{
+            System.out.println("nothing else matters");
+        }
+    }
+}
+

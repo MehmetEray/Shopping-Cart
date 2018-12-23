@@ -9,7 +9,6 @@ public class Menu {
     public static void main(String[] args) throws IOException {
         regOrLog();
     }
-
     public static void regOrLog() {
         System.out.println("Have you ever register before? y or n?");
         String option = input.next();
@@ -41,9 +40,9 @@ public class Menu {
     public static void loginCheck(){
         boolean check = false;
         try {
-            System.out.println("Please give your name");
+            System.out.println("Please enter your username");
             String username = input.next();
-            System.out.println("Please give your password");
+            System.out.println("Please enter your password");
             String password = input.next();
             BufferedReader br = new BufferedReader(new FileReader(file));
             String[] userArray = br.readLine().split("!");

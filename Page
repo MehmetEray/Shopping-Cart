@@ -7,15 +7,16 @@ import java.util.Scanner;
 public class Page extends Item{
     static ArrayList<Item> Cart  = new ArrayList<>();
     public static Item item = new Item();
+    static int id;
+    static Scanner scan = new Scanner(System.in);
     public static void generalMenu(String type, String username){
         Scanner input = new Scanner(System.in);
         if (type.equals("admin")){
             // admin menu will come here
-            System.out.println("Welcome Admin : " + username);
             System.out.println("*********ADMIN MENU*********");
             System.out.println(" 0 - LOG OUT");
             System.out.println(" 1 - Enter a product ");
-            System.out.println(" 2 - Delete a product");
+            System.out.println(" 2 - Delete a product ");
             System.out.println(" 3 - List products and get description");
             System.out.println(" 99 -> EXIT");
             int selection = input.nextInt();
@@ -26,18 +27,18 @@ public class Page extends Item{
                 case 1:
                     System.out.println("Please enter type");
                     String type2  = input.next();
-                    System.out.println("Please enter id");
-                    int id  = input.nextInt();
                     System.out.println("Please enter name of item");
                     String name2 = input.next();
                     System.out.println("Please enter price of item with double type");
                     double price = input.nextDouble();
-                    System.out.println("Please give me quantity");
+                    System.out.println("Please enter items quantity");
                     int quantity  = input.nextInt();
                     System.out.println("Please enter description of item");
-                    String desc = input.nextLine();
+                    String desc = input.next();
+                    checkID();
                     Item tempNewItem = new Item(id,name2,price,desc,quantity,type2);
                     item.addItemToList(tempNewItem);
+                    System.out.println("item added to list successfully");
                     String str2 ;
                     BufferedOutputStream bos = null;
                     try {
@@ -50,7 +51,7 @@ public class Page extends Item{
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Page.generalMenu("admin",username);
+                Page.generalMenu("admin",username);
                 case 2:
                     for (Item i:itemList){
                         System.out.println("Item name : " + i.getName() );
@@ -58,13 +59,11 @@ public class Page extends Item{
                     System.out.println("which item do you want to remove");
                     String removeItem = input.next();
                     item.removeItem(removeItem);
-                    System.out.println(removeItem + "is deleted");
+                    System.out.println(removeItem + " is deleted");
                     Page.generalMenu("admin",username);
                 case 3:
-                    for (Item i:itemList){
-                        System.out.println("Item ID : " + i.getID() + "Item name : " + i.getName() );
-                    }
-                    System.out.println("give me id");
+                    printIDs();
+                    System.out.println("Enter ID please");
                     int selectionId = input.nextInt();
                     item.getItemDescription(selectionId);
                     Page.generalMenu("admin",username);
@@ -76,7 +75,6 @@ public class Page extends Item{
             }
         }
         else if (type.equals("user")){
-            System.out.println("Welcome User : " + username);
             System.out.println("*********USER MENU*********");
             System.out.println(" 0 - LOG OUT");
             System.out.println(" 1 - List all products");
@@ -102,6 +100,7 @@ public class Page extends Item{
                         System.out.println("-------------");
                     generalMenu("user",username);
                 case 3:
+                    printIDs();
                     System.out.println("Enter product's ID please");
                     int selectionId = input.nextInt();
                     item.getItemDescription(selectionId);
@@ -117,19 +116,21 @@ public class Page extends Item{
                         }
                     }
                     for (Item i:Cart){
-                        System.out.println(i.getName());
+                        System.out.println(i.getName() + " is added to your cart");
                     }
                     System.out.println("-------------");
                     generalMenu("user",username);
                 case 5:
-                    System.out.println("Enter product's name please");
-                    String selectionName = input.next();
                     if (Cart.size() == 0){
                         System.out.println("There is no item in cart");
-                    }
-                    else {
-                        for (Item i:Cart){
-                            Cart.remove(i);
+                        generalMenu("user",username);
+                    }else{
+                        System.out.println("Enter product's name please");
+                        String selectionName = input.next();
+                        for (int i=0;i<Cart.size();i++){
+                            if (Cart.get(i).getName().equals(selectionName)){
+                                Cart.remove(i);
+                            }
                         }
                         for (Item i:Cart){
                             System.out.println(i.getName());
@@ -139,10 +140,10 @@ public class Page extends Item{
                     }
                     generalMenu("user",username);
                 case 6:
-                    System.out.println("Sürmeli Inc., the American auction company, is the largest auction site shopping " +
-                            "website on the Internet. Sürmeli was founded on September 3, " +
-                            "1995 by Turkish entrepreneur Mehmet Eray Sürmeli " +
-                            "in San José, California.");
+                    System.out.println("Sürmeli Inc., the American auction company, is the largest auction site shopping \n" +
+                                        "website on the Internet. Sürmeli was founded on September 3, 1995 by Turkish entrepreneur \n" +
+                                        "Mehmet Eray Sürmeli \n " +
+                                        "in San José, California.");
                     System.out.println("-------------");
                     generalMenu("user",username);
                 case 7:
@@ -159,9 +160,25 @@ public class Page extends Item{
             }
         }
         else{
-            System.out.println("nothing else matters");
+            System.out.println("WRONG WAY");
         }
     }
-
+    public static void printIDs(){
+        for (Item i:itemList){
+            System.out.println("Item ID : " + i.getID() + "  / " + " Item name : " + i.getName() );
+        }
+    }
+    public static int checkID(){
+        System.out.println("Please enter ID");
+        int id  = scan.nextInt();
+        for (Item temp : itemList) {
+            if (temp.getID() == id) {
+                printIDs();
+                System.out.println("This id is already defined.Those are existed IDs.Please enter ID except for those IDs");
+                checkID();
+            }
+        }
+        return id;
+    }
 }
 

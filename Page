@@ -1,8 +1,11 @@
 package ProjectPackage;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Page {
+public class Page extends Item{
+    static ArrayList<Item> Cart  = new ArrayList<>();
     public static Item item = new Item();
     public static void generalMenu(String type, String username){
         Scanner input = new Scanner(System.in);
@@ -13,8 +16,7 @@ public class Page {
             System.out.println(" 0 - LOG OUT");
             System.out.println(" 1 - Enter a product ");
             System.out.println(" 2 - Delete a product");
-            System.out.println(" 3 - List products");
-            System.out.println(" 4 - List registered users");
+            System.out.println(" 3 - List products and get description");
             System.out.println(" 99 -> EXIT");
             int selection = input.nextInt();
             switch (selection) {
@@ -22,32 +24,52 @@ public class Page {
                     Menu.regOrLog();
                     break;
                 case 1:
-                    System.out.println("Please give me id");
+                    System.out.println("Please enter type");
+                    String type2  = input.next();
+                    System.out.println("Please enter id");
                     int id  = input.nextInt();
-                    System.out.println("Please give me name of item");
-                    String name = input.next();
-                    System.out.println("Please give me price of item");
+                    System.out.println("Please enter name of item");
+                    String name2 = input.next();
+                    System.out.println("Please enter price of item with double type");
                     double price = input.nextDouble();
-                    System.out.println("Please give me desc of item");
-                    String desc = input.next();
                     System.out.println("Please give me quantity");
                     int quantity  = input.nextInt();
-                    Item tempNewItem = new Item(id,name,price,desc,quantity);
-                    item.addItemToCart(tempNewItem);
+                    System.out.println("Please enter description of item");
+                    String desc = input.nextLine();
+                    Item tempNewItem = new Item(id,name2,price,desc,quantity,type2);
+                    item.addItemToList(tempNewItem);
+                    String str2 ;
+                    BufferedOutputStream bos = null;
+                    try {
+                        BufferedOutputStream bos2 = new BufferedOutputStream(new FileOutputStream("products.txt",true));
+                        str2 = String.valueOf(tempNewItem);
+                        byte[] byteCalc2 = str2.getBytes();
+                        bos2.write(byteCalc2);
+                        bos2.flush();
+                        bos2.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     Page.generalMenu("admin",username);
                 case 2:
+                    for (Item i:itemList){
+                        System.out.println("Item name : " + i.getName() );
+                    }
                     System.out.println("which item do you want to remove");
                     String removeItem = input.next();
                     item.removeItem(removeItem);
+                    System.out.println(removeItem + "is deleted");
                     Page.generalMenu("admin",username);
                 case 3:
+                    for (Item i:itemList){
+                        System.out.println("Item ID : " + i.getID() + "Item name : " + i.getName() );
+                    }
                     System.out.println("give me id");
                     int selectionId = input.nextInt();
                     item.getItemDescription(selectionId);
                     Page.generalMenu("admin",username);
-                case 4:
-                    Page.generalMenu("admin",username);
                 case 99:
+                    System.exit(99);
                     break;
                 default:
                     break;
@@ -60,53 +82,77 @@ public class Page {
             System.out.println(" 1 - List all products");
             System.out.println(" 2 - List products of type");
             System.out.println(" 3 - Get description for a product");
-            System.out.println(" 4 - Add to my cart");
-            System.out.println(" 5 - Cancel an item");
-            System.out.println(" 6 - Buy items");
-            System.out.println(" 7 - Show my history");
+            System.out.println(" 4 - Add item to cart");
+            System.out.println(" 5 - Cancel an item from cart");
+            System.out.println(" 6 - Show my history");
+            System.out.println(" 7 - List Items with type");
             System.out.println(" 99 -> EXIT");
             int selection = input.nextInt();
             switch (selection){
                 case 0:
                     Menu.regOrLog();
+                    System.out.println("-------------");
                     generalMenu("user",username);
                 case 1:
                     item.getItemList();
+                    System.out.println("-------------");
                     generalMenu("user",username);
                 case 2:
+                    item.ListProductOfType();
+                        System.out.println("-------------");
                     generalMenu("user",username);
                 case 3:
                     System.out.println("Enter product's ID please");
                     int selectionId = input.nextInt();
                     item.getItemDescription(selectionId);
+                    System.out.println("-------------");
                     generalMenu("user",username);
                 case 4:
-                    System.out.println("Enter item name please");
-                    String addedItemName = input.next();
-                    System.out.println("Enter item ID please");
-                    int addedItemID = input.nextInt();
-                    System.out.println("Enter item description please");
-                    String addedItemDesc = input.next();
-                    System.out.println("Enter item price please");
-                    double addedItemPrice = input.nextDouble();
-                    System.out.println("Enter item quantity please");
-                    int addedItemQuantity = input.nextInt();
-                    Item item4 = new Item(addedItemID,addedItemName,addedItemPrice,addedItemDesc,addedItemQuantity);
-                    item.addItemToCart(item4);
-                    System.out.println(addedItemName + " is added");
+                    item.getItemList();
+                    System.out.println(("Enter item name please"));
+                    String optionName = input.next();
+                    for (Item i:itemList){
+                        if (i.getName().equals(optionName)){
+                            Cart.add(i);
+                        }
+                    }
+                    for (Item i:Cart){
+                        System.out.println(i.getName());
+                    }
+                    System.out.println("-------------");
                     generalMenu("user",username);
                 case 5:
                     System.out.println("Enter product's name please");
                     String selectionName = input.next();
-                    Item.removeItem(selectionName);
-                    System.out.println(selectionName + " is canceled ");
+                    if (Cart.size() == 0){
+                        System.out.println("There is no item in cart");
+                    }
+                    else {
+                        for (Item i:Cart){
+                            Cart.remove(i);
+                        }
+                        for (Item i:Cart){
+                            System.out.println(i.getName());
+                        }
+                        System.out.println(selectionName + " is canceled ");
+                        System.out.println("-------------");
+                    }
                     generalMenu("user",username);
                 case 6:
+                    System.out.println("Sürmeli Inc., the American auction company, is the largest auction site shopping " +
+                            "website on the Internet. Sürmeli was founded on September 3, " +
+                            "1995 by Turkish entrepreneur Mehmet Eray Sürmeli " +
+                            "in San José, California.");
+                    System.out.println("-------------");
                     generalMenu("user",username);
                 case 7:
-                    System.out.println("Our history is ...");
+                    System.out.println("Enter product's type please");
+                    String selectType = input.next();
+                    item.getItemType(selectType);
+                    System.out.println("-------------");
                     generalMenu("user",username);
                 case 99:
+                    System.exit(99);
                     break;
                 default:
                     break;
@@ -116,5 +162,6 @@ public class Page {
             System.out.println("nothing else matters");
         }
     }
+
 }
 

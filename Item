@@ -11,8 +11,6 @@ public class Item {
     private int itemQuantity;
     private String itemType;
 
-
-
     public static ArrayList<Item> itemList = new ArrayList<>();
 
     public Item(){
@@ -31,11 +29,18 @@ public class Item {
 
     public void init(){
         Item item1 = new Item(1,"table",200.0,"The most useful table in the world",5,"Manufacturing");
-        Item item2 = new Item(2,"computer",300.0,"The fastest computer in the world",6,"Electronic");
+        Item item2 = new Item(2,"computer",300.0,"The fastest computer in the world",6,"Electronics");
         Item item3 = new Item(3,"War book",40.0,"This book is best seller",7,"Books");
+        Item item4 = new Item(4,"Mouse",45,"This mouse has very useful features",50,"Electronics");
+        Item item5 = new Item(5,"Keyboard",100,"This keyboard has very useful features",2000,"Electronics");
+        Item item6 = new Item(6,"Television",10000,"This television has very useful features",200,"Manufacturing");
+
         itemList.add(item1);
         itemList.add(item2);
         itemList.add(item3);
+        itemList.add(item4);
+        itemList.add(item5);
+        itemList.add(item6);
         try {
             String str ;
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("products.txt",true));
@@ -54,13 +59,7 @@ public class Item {
         }
     }
 
-    public String getItemType() {
-        return itemType;
-    }
-
-    public void setItemType(String itemType) {
-        this.itemType = itemType;
-    }
+    // METHODS
 
     public void getItemList(){
         for (int i = 0; i<itemList.size();i++){
@@ -83,6 +82,7 @@ public class Item {
             }
         }
     }
+
     public void ListProductOfType(){
         for (int i=0;i<itemList.size();i++){
             System.out.println(itemList.get(i).itemType);
@@ -92,6 +92,7 @@ public class Item {
     public void addItemToList(Item item){
         itemList.add(item);
     }
+
     public void getItemType(String itemType){
         for (int i=0;i<itemList.size();i++){
             if (itemList.get(i).getItemType().equals(itemType)){
@@ -99,6 +100,8 @@ public class Item {
             }
         }
     }
+
+    // GETTERS
 
     public int getID(){
         return itemID;
@@ -118,6 +121,10 @@ public class Item {
 
     public int getQuantity(){
         return itemQuantity;
+    }
+
+    public String getItemType() {
+        return itemType;
     }
 }
 

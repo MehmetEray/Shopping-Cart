@@ -1,5 +1,6 @@
 package ProjectPackage;
 
+import java.io.*;
 import java.util.ArrayList;
 
 public class Item {
@@ -8,30 +9,65 @@ public class Item {
     private double itemPrice;
     private String itemDescription;
     private int itemQuantity;
+    private String itemType;
+
+
+
     public static ArrayList<Item> itemList = new ArrayList<>();
+
     public Item(){
         init();
     }
-    public Item (int itemID, String itemName, double itemPrice, String itemDescription, int itemQuantity){
+
+    public Item (int itemID, String itemName, double itemPrice, String itemDescription, int itemQuantity,String itemType){
+
         this.itemID = itemID;
         this.itemName = itemName;
         this.itemPrice = itemPrice;
         this.itemDescription = itemDescription;
         this.itemQuantity = itemQuantity;
+        this.itemType = itemType;
     }
+
     public void init(){
-        Item item1 = new Item(1,"table",200.0,"The most useful table in the world",5);
-        Item item2 = new Item(2,"computer",300.0,"The fastest computer in the world",6);
-        Item item3 = new Item(3,"book",40.0,"This book is best seller",7);
+        Item item1 = new Item(1,"table",200.0,"The most useful table in the world",5,"Manufacturing");
+        Item item2 = new Item(2,"computer",300.0,"The fastest computer in the world",6,"Electronic");
+        Item item3 = new Item(3,"War book",40.0,"This book is best seller",7,"Books");
         itemList.add(item1);
         itemList.add(item2);
         itemList.add(item3);
+        try {
+            String str ;
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream("products.txt",true));
+            for(int i=0;i<itemList.size();i++) {
+                str = String.valueOf(itemList.get(i));
+                byte[] byteCalc = str.getBytes();
+
+                bos.write(byteCalc);
+                bos.flush();
+            }
+            bos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public String getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
     public void getItemList(){
         for (int i = 0; i<itemList.size();i++){
             System.out.println(itemList.get(i).getName());
         }
     }
+
     public void getItemDescription(int id){
         for (int i = 0; i<itemList.size();i++){
             if (itemList.get(i).getID() == id){
@@ -39,6 +75,7 @@ public class Item {
             }
         }
     }
+
     public static void removeItem(String itemName){
         for (int i=0;i<itemList.size();i++){
             if (itemList.get(i).getName().equals(itemName)){
@@ -46,8 +83,21 @@ public class Item {
             }
         }
     }
-    public void addItemToCart(Item item){
+    public void ListProductOfType(){
+        for (int i=0;i<itemList.size();i++){
+            System.out.println(itemList.get(i).itemType);
+        }
+    }
+
+    public void addItemToList(Item item){
         itemList.add(item);
+    }
+    public void getItemType(String itemType){
+        for (int i=0;i<itemList.size();i++){
+            if (itemList.get(i).getItemType().equals(itemType)){
+                System.out.println("Item Name : " + itemList.get(i).itemName + " Item ID : " + itemList.get(i).getID());
+            }
+        }
     }
 
     public int getID(){

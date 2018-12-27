@@ -1,6 +1,6 @@
 package ProjectPackage;
 
-import java.io.*;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,7 +20,7 @@ public class Page extends Item{
             System.out.println(" 3 - List products and get description");
             System.out.println(" 99 -> EXIT");
             int selection = input.nextInt();
-            switch (selection) {
+            switch (selection) 
                 case 0:
                     Menu.regOrLog();
                     break;
@@ -50,7 +50,7 @@ public class Page extends Item{
                         bos2.close();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    
                 Page.generalMenu("admin",username);
                 case 2:
                     for (Item i:itemList){
@@ -74,7 +74,7 @@ public class Page extends Item{
                     break;
             }
         }
-        else if (type.equals("user")){
+        else if (type.equals){
             System.out.println("*********USER MENU*********");
             System.out.println(" 0 - LOG OUT");
             System.out.println(" 1 - List all products");
